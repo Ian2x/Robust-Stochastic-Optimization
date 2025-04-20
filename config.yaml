@@ -1,0 +1,59 @@
+# ---------------------------------------------------------------------------
+# Hyper‑parameters for SEVER vs Robust Gradient Descent (RGD) experiment
+
+# By:
+#     Ian Wang
+#     ChatGPT
+
+# Course:
+#     CPSC 561 — Yale University, Spring 2025
+
+# References:
+#     Diakonikolas, I., Kamath, G., Kane, D., Li, J., Steinhardt, J., & Stewart, A. (2019).
+#         SEVER: A robust meta-algorithm for stochastic optimization. In
+#         International Conference on Machine Learning (pp. 1596-1606). PMLR.
+
+#     Prasad, A., Suggala, A. S., Balakrishnan, S., & Ravikumar, P. (2018).
+#         Robust estimation via robust gradient estimation. CoRR, abs/1802.06485.
+
+# ---------------------------------------------------------------------------
+
+# List of outlier fractions epsilons
+eps_grid: [0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10, 0.25, 0.50]
+
+# Dataset sizes
+n_train: 5000
+n_test: 100
+
+# Data dimension
+d: 500                 # takes around 0.75*d*len(eps_grid-1) seconds to run
+
+# Standard deviation of the additive label noise
+noise_std: 0.1
+
+# Ridge penalty λ.
+# A near‑optimal setting for synthetic Gaussian data is lam ≈ d * noise_std**2
+# e.g. (500 * 0.1² = 5.0)
+lam: 5.0
+
+# Outlier‑generation parameters (see Sec 3.1 of the Sever paper)
+# Heuristic so that L2‑scores of clean/outliers overlap: alpha_out ≈ (1 − eps) / (eps * sqrt(d))
+# If alpha_out = beta_out, ridge regression predicts 0 for parameters
+alpha_out: 0.45        # feature scale of adversarial points
+beta_out: 0.45         # response value assigned to adversarial points
+
+# Experiment replication
+repeats: 3             # Use median across repeats
+seed: 42               # RNG seed for reproducibility
+
+# If true, use [PSBR18] data generation; if false, use [DKK+19b] data generation
+alt_setup: false       # set true to switch generators
+
+# Number of filtering rounds (for SEVER)
+filter_rounds: 4
+
+# Robust Gradient Descent (RGD) hyper‑parameters
+rgd:
+  eta:   0.5           # learning‑rate / step‑size
+  T:     80            # number of iterations
+  delta: 1.0e-4        # confidence for the Huber gradient estimator (not actually used in my simplified implementation)
