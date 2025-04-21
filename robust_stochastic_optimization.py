@@ -193,7 +193,7 @@ def _recursive_huber_grad(S, eps, delta, rng=None):
 def huber_gradient_estimator(theta, X, y, lam, eps, delta, rng=None):
     rng = rng or default_rng()
     preds = X @ theta
-    per_grad = X * (preds - y)[:, None] + lam * theta
+    per_grad = X * (preds - y)[:, None] + lam * theta / X.shape[0]
     return _recursive_huber_grad(per_grad, eps, delta, rng)
 
 def robust_gradient_descent(X, y, lam, eps, eta=0.5, T=50, delta=1e-4, rng=None):
